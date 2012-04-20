@@ -10,9 +10,8 @@ require "./lib/tagging"
 
 ARCHIVE_DIR = "/pub/audio/Archive"
 TARGET_DIR = "/pub/audio/Music"
-TMP_FILE = "/pub/audio/Temp/audio.m4a"
+TMP_FILE = "/pub/audio/Temp/tagged.m4a"
 
-CMD = "wvunpack \"%{input}\" -o - | neroAacEnc -q 0.5 -ignorelength -if - -of \"%{output}\""
 MEDIA_GID = 1003
 
 def traverse_archive_dir(dir = "")
@@ -25,14 +24,11 @@ def traverse_archive_dir(dir = "")
 
       # Here's a wavpack file, time to convert it!
       target_file = "#{TARGET_DIR}#{File.dirname(next_entry)}/#{File.basename(next_entry, '.wv')}.m4a"
-      unless File.exists?(target_file)
-        print "#{next_entry}\n"
-        if system(CMD % { :input => "#{ARCHIVE_DIR}#{next_entry}".gsub('$', '\$'), :output => TMP_FILE })
-          #FileUtils.mv(TMP_FILE, target_file)
-          tag_m4a(TMP_FILE, target_file.gsub('$', '\$'), src_meta)
-        end
+      print "#{next_entry}\n"
+      if tag_m4a(target_file, TMP_FILE, src_meta)
+        FileUtils.mv TMP_FILE ,target_file
+        File.chown(nil, MEDIA_GID, target_file)
       end
-      File.chown(nil, MEDIA_GID, target_file)
 
     elsif File.directory?("#{ARCHIVE_DIR}#{next_entry}") and entry[0] != '.'
       Dir.mkdir("#{TARGET_DIR}#{next_entry}") unless File.exists?("#{TARGET_DIR}#{next_entry}")
