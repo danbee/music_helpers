@@ -5,12 +5,14 @@
 # apetag will let us read the tags from the wavpack file.
 require "apetag"
 
+TAGGING_CMD = "/tank/audio/Bin/AtomicParsley"
+
 def tag_m4a(source, target, tags = {})
   # sort out the track and disc numbers
   #tags["disc"], tags["totaldiscs"] = tags.delete("disc").split("/") unless tags["disc"].nil?
   #tags["track"], tags["totaltracks"] = tags.delete("track").split("/") unless tags["track"].nil?
 
-  tag_cmd = "AtomicParsley \"#{source.gsub('$', '\$')}\" -o \"#{target.gsub('$', '\$')}\" --foobar2000Enema"
+  tag_cmd = "#{TAGGING_CMD} \"#{source.gsub('$', '\$')}\" -o \"#{target.gsub('$', '\$')}\" --foobar2000Enema"
   tag_cmd += " --artist \"#{tags["artist"].gsub('"', '\"')}\""
   tag_cmd += " --albumArtist \"#{tags["album artist"].gsub('"', '\"') unless tags["album artist"].nil?}\""
   tag_cmd += " --title \"#{tags["title"].gsub('"', '\"')}\""

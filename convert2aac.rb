@@ -8,12 +8,14 @@ require "fileutils"
 require "highline/import"
 require "./lib/tagging"
 
-ARCHIVE_DIR = "/pub/audio/Archive"
-TARGET_DIR = "/pub/audio/Music"
-TMP_FILE = "/pub/audio/Temp/audio.m4a"
+ARCHIVE_DIR = "/tank/audio/Archive"
+TARGET_DIR = "/tank/audio/Music"
+TMP_FILE = "/tank/audio/Temp/audio.m4a"
 
-CMD = "wvunpack \"%{input}\" -o - | neroAacEnc -q 0.5 -ignorelength -if - -of \"%{output}\""
-MEDIA_GID = 1003
+ENCODE_CMD = "/tank/audio/Bin/neroAacEnc"
+
+CMD = "wvunpack \"%{input}\" -o - | #{ENCODE_CMD} -q 0.5 -ignorelength -if - -of \"%{output}\""
+MEDIA_GID = 2001
 
 def traverse_archive_dir(dir = "")
   Dir.entries("#{ARCHIVE_DIR}#{dir}").sort.each do |entry|
