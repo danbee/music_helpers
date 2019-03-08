@@ -1,0 +1,6 @@
+#!/bin/zsh
+# Run this from the Mac!
+
+source musicsync.conf.d/$1.conf
+
+/usr/local/bin/rsync -rvt $OPTIONS --exclude-from $EXCLUDE $SOURCE $DESTINATION

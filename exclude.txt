@@ -1,0 +1,7 @@
+.*
+Archive
+OldArchive
+Temp
+Bin
+Temporary\ Items
+Network\ Trash\ Folder
